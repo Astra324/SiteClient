@@ -1,0 +1,194 @@
+<div class="col4a">
+
+    <!-- Base-Teaser -->
+    <div class="col1 basicTeaser">
+        <div class="group">
+            <div class="news minHeight">
+                <a href="/ru/borrel-raskritikoval-narastajushhie-somnenija-v-sankcijah-protiv-rf/a-62507377">
+                    <div class="teaserImg">
+                        <img loading="lazy" itemprop="image" src="https://static.dw.com/image/61718538_301.jpg" title="Глава европейской дипломатии Жозеп Боррель" alt="Глава европейской дипломатии Жозеп Боррель" width="220" height="124"> </div>
+                    <h2 class="linkable">
+                        Боррель раскритиковал сомнения в действии санкций против РФ
+                    </h2>
+                    <p>Критики санкций должны прекратить распространять ложную информацию и подкреплять аргументы цифрами, заявил Боррель.
+                        &nbsp; </p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End Base-Teaser -->
+
+
+    <!-- Base-Teaser -->
+    <div class="col1 basicTeaser">
+        <div class="group">
+            <div class="news minHeight">
+                <a href="/ru/jeks-komandujushhij-nato-prognoziruet-zamorozhennyj-konflikt-ukrainy-i-rf/a-62505614">
+                    <div class="teaserImg">
+                        <img loading="lazy" itemprop="image" src="https://static.dw.com/image/62496047_301.jpg" title="Украинский военнослужащий во время учений близ линии фронта" alt="Украинский военнослужащий во время учений близ линии фронта" width="220" height="124"> </div>
+                    <h2 class="linkable">
+                        Ставридис прогнозирует "замороженный конфликт" Украины и РФ
+                    </h2>
+                    <p>Война в Украине может завершиться по корейскому сценарию через 4-6 месяцев, считает экс-командующий силами НАТО. &nbsp; </p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End Base-Teaser -->
+
+
+    <!-- Base-Teaser -->
+    <div class="col1 basicTeaser">
+        <div class="group">
+            <div class="news minHeight">
+                <a href="/ru/telekanal-dozhd-gotovitsja-vozobnovit-veshhanie/a-62505901">
+                    <div class="teaserImg">
+                        <img loading="lazy" itemprop="image" src="https://static.dw.com/image/61021415_301.jpg" title="Студия телеканала Дождь" alt="Студия телеканала Дождь" width="220" height="124"> </div>
+                    <h2 class="linkable">
+                        Телеканал "Дождь" готовится возобновить вещание
+                    </h2>
+                    <p>Вечерние прямые эфиры "Дождя" планируется запустить 18 июля, сообщила гендиректор телеканала Наталья Синдеева.
+                        &nbsp; </p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End Base-Teaser -->
+
+
+    <!-- Base-Teaser -->
+    <div class="col1 basicTeaser">
+        <div class="group">
+            <div class="news minHeight">
+                <a href="/ru/shvedskaja-kompanija-hm-group-uhodit-iz-rossii/a-62506480">
+                    <div class="teaserImg">
+                        <img loading="lazy" itemprop="image" src="https://static.dw.com/image/61092531_301.jpg" title="Женщины возле витрины магазина H&amp;M в Москве" alt="Женщины возле витрины магазина H&amp;M в Москве" width="220" height="124"> </div>
+                    <h2 class="linkable">
+                        Шведская компания H&amp;M Group уходит из России
+                    </h2>
+                    <p>H&amp;M Group заявила о невозможности продолжать бизнес в РФ с учетом текущей ситуации и непредсказуемого будущего.
+                        &nbsp; </p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- End Base-Teaser -->
+
+</div>
+<script th:inline="javascript">
+        window.currentUser = {
+            maxResultCount: 0,
+            clientData: null
+        };
+         window.maxResultCount = 1;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let dataSource = [[${data_source}]];
+            loadClientData(dataSource, 0);
+        });
+
+        async function loadClientData(data_source, startIndex){
+            var url = "http://localhost:8081" + data_source + "/" + startIndex;
+
+            console.log(url);
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+
+            if (response.ok === true) {
+                const data = await response.json();
+                window.clientData = data;
+                console.log(window.clientData);
+                writeDataList();
+            }
+        }
+        function writeDataList(){
+            const siteList = window.clientData.siteList;
+            let appHeader = document.querySelector('#app-header-placeholder');
+            let mainContainer = document.createElement('div');
+            mainContainer.className ="container  pt-5";
+
+            for(let siteObj of siteList){
+                let siteName = siteObj.name;
+                let dataList = window.clientData.dataMap[siteName];
+
+                let siteTitleBox = document.createElement('div');
+                siteTitleBox.className = "alert mt-3 p-3";
+
+                let siteTitle = document.createElement('h4')
+                siteTitle.textContent = siteName;
+                siteTitleBox.append(siteTitle);
+
+                let sitePromo = document.createElement('b')
+                sitePromo.className = "text-muted";
+                sitePromo.textContent = siteObj.title;
+
+                siteTitleBox.append(sitePromo);
+                mainContainer.append(siteTitleBox);
+
+
+                let table = document.createElement('div');
+                table.className = "row row-cols-1 row-cols-lg-5 align-items-stretch g-4 py-1";
+
+                for(let catalogItem of dataList){
+                    let coll = document.createElement('div');
+                    coll.className = "catalog_item col";
+                    let card = document.createElement('div');
+                    card.className = "card card-cover h-100 overflow-hidden text-white bg-light bg-gradient rounded-5 shadow-lg";
+                    //card.style = "height: 600px;";
+
+                    let dFlex = document.createElement('div');
+                    dFlex.className = "d-flex flex-column h-100  pb-3 text-muted text-shadow-1";
+
+                    let link  = document.createElement('a');
+                    link.className = "link-secondary";
+                    link.id = "item_link";
+                    link.href = catalogItem.href;
+
+                    let image = document.createElement('img');
+                    image.className = "bd-placeholder-img card-img-top";
+                    image.src = catalogItem.imgSrc;
+                    image.id = "item_image"
+                    link.innerHTML = image.outerHTML;
+
+                    dFlex.append(link);
+
+                    let cardBody = document.createElement('div');
+                    cardBody.className = "card-body";
+
+                    let articleDataLink = document.createElement('a');
+                    articleDataLink.className = "link-secondary";
+                    articleDataLink.id = "article_data_link";
+                    articleDataLink.href = "/articles/" + catalogItem.id;
+
+                    let date = document.createElement('p');
+                    date.className = "card-text text-muted mb-3";
+                    date.id = "item_date";
+                    date.textContent = catalogItem.postDate;
+                    cardBody.append(date);
+
+                    let title = document.createElement('h5');
+                    title.className = "card-title";
+                    title.style = "max-width: 300px; display:block;"
+                    title.id = "item_title";
+                    title.textContent = catalogItem.title;
+                    articleDataLink.innerHTML = title.outerHTML;
+                    cardBody.append(articleDataLink);
+
+                    dFlex.append(cardBody);
+                    card.append(dFlex);
+                    coll.append(card);
+                    table.append(coll);
+                }
+                mainContainer.append(table);
+            }
+
+            appHeader.after(mainContainer);
+        }
+    </script>
+
+
+
+

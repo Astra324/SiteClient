@@ -1,0 +1,43 @@
+<div th:fragment="scripts">
+
+    <script th:inline="javascript" type="module">
+        import {loadClientData} from './app.js';
+
+        window.currentUser = {
+            currentIndex: 0,
+            maxResultCount: 0,
+            dataSource : '',
+            clientData: null
+        };
+         window.maxResultCount = 1;
+         window.dataSource = [[${data_source}]];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            loadClientData(window.dataSource, 0);
+        });
+    </script>
+
+    <script th:inline="javascript" type="module">
+        import {navigateClientData} from './app.js';
+        import {prepareIndex} from './app.js';
+
+        window.navigate = function navigate(direction) {                
+                let index = prepareIndex(direction);
+                console.log("direction : " + direction + " : " + index);
+                navigateClientData(window.dataSource, index)
+        }
+        window.navigateClientCatalogData =  function navigateClientCatalogData(dataSource, siteName, startIndex){
+                let url = dataSource + siteName;
+                console.log("catalog  data source : " + url);
+                navigateClientData(url, startIndex)
+                let navTitle = document.querySelector('#navigated-title');
+                navTitle.textContent = siteName;
+        }
+        window.search = function search(dataSource){
+                let searchInput = document.querySelector('#search-input');
+                let url = dataSource + '/' + searchInput.value;
+                navigateClientData(url, '0')
+                console.log("searching : " + url);
+        }
+    </script>
+</div>

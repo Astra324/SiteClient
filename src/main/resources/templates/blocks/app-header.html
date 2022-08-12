@@ -1,0 +1,77 @@
+<div th:fragment="header">
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+            integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+            crossorigin="anonymous"></script>
+
+    <script th:inline="javascript" src="/views.js" type="module"></script>
+    <script th:inline="javascript" src="/app.js" type="module"></script>
+
+
+    <nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-dark bg-gradient opacity-100"
+         aria-label="Third navbar example">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarsExample03">
+                <div class="vr bg-light ms-2" style="height: 30"></div>
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+
+                    <li class="nav-item">
+                        <a th:text="${app_title}" class="nav-link active ms-3" aria-current="page" th:href="${root_link}">Top 5</a>
+                    </li>
+                    <div class="vr bg-light ms-3"></div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link active dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown"
+                           aria-expanded="false">Select site</a>
+                        <ul th:id="site_list" class="dropdown-menu" aria-labelledby="dropdown03">
+                            <li><a th:each="site : ${data.siteList}" th:onclick="window.navigateClientCatalogData('/app-data-catalog/', [[${site.name}]], '0')"
+                                   th:text="${site.title}" class="dropdown-item"></a></li>
+                        </ul>
+                    </li>
+                    <div class="vr bg-light ms-3"></div>
+                    <li class="nav-item ">
+                        <h4 id="navigated-title" th:text="${app_title}" class="text-light ms-3 mt-1"></h4>
+                    </li>
+                    <div class="vr bg-light ms-3"></div>
+
+                    <li class="nav-item ms-3 mt-1">
+                        <div id="navigator"  class="btn-group position-relative start-0">
+
+                            <button id="left" onclick="window.navigate('left')"
+                                    type="button"
+                                    class="btn btn-sm btn-outline-secondary">&lt&lt&lt Preview&nbsp</button>
+
+
+                            <div class="vr bg-light ms-1"></div>
+
+                            <div class="vr bg-light ms-1"></div>
+
+
+                            <button id="right" onclick="window.navigate('right')"
+                                    type="button"
+                                    class="btn btn-sm btn-outline-secondary">&nbsp&nbsp&nbsp&nbspNext &gt&gt&gt</button>
+                        </div>
+                    </li>
+                </ul>
+
+
+
+                <div class="input-group mb-1" style="max-width: 350px;">
+                    <input id="search-input" type="text" class="form-control" placeholder="Write search pattern"
+                           aria-label="write search pattern" aria-describedby="button-addon2" style="width:230px;">
+                    <button onclick="window.search('/app-data-search')" class="form-control btn btn-outline-secondary" type="button">Search</button>
+                </div>
+                <div class="vr bg-light ms-3 me-1"></div>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="navbar fixed-bottom navbar-dark bg-dark justify-content-center opacity-75"
+         aria-label="Пример навигации по страницам" style="height: 50px;">
+
+    </nav>
+
+
+</div>

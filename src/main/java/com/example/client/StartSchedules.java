@@ -19,7 +19,7 @@ public class StartSchedules {
 
     @Scheduled(fixedDelay = 3600000, initialDelay = 3000 )
     public void dbUpdate(){
-        siteService.callDbUpdate();
+        //siteService.callDbUpdate();
         System.out.println("Scheduled update");
     }
 }

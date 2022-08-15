@@ -14,17 +14,21 @@
             });
 
             if (response.ok === true) {
+
                 const data = await response.json();
+                window.userName = document.querySelector("#user-name").value;
                 window.currentIndex = data.currentIndex;
                 window.maxResultCount = data.maxResultCount;
                 window.dataSource = data.dataSource;
                 window.clientData = data;
                 console.log("params : current index : " + window.currentIndex + " data source : " + window.dataSource + " max count : " + maxResultCount);
+                console.log("User name : " + document.querySelector("#user-name").value);
                 writeDataBlockContainer();
             }
    }
 
    export async function navigateClientData(data_source, startIndex){
+   console.log('doc cookie - ' + document.cookie)
             var url = appHost + data_source + "/" + startIndex;
             console.log("data source : " + url + " index : " + startIndex);
             const response = await fetch(url, {
@@ -41,6 +45,7 @@
                 console.log("params : current index : " + window.currentIndex + " data source : " + window.dataSource + " max count : " + maxResultCount);
                 let container = document.querySelector('div.container');
                 container.remove();
+                console.log("User name : " + window.userName);
                 writeDataBlockContainer();
                 printInfo();
             }

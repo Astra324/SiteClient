@@ -11,8 +11,13 @@ import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -57,7 +62,8 @@ public class ClientController {
 
     @GetMapping("/app-data-top5/{start}")
     //@ResponseBody
-    public  ClientDto dataTop10(@PathVariable(value = "start") Integer start,Model model){
+    public  ClientDto dataTop10(@PathVariable(value = "start") Integer start, Model model){
+
         var map = catalogService.getAggregateMap(start * top5ListLimit,top5ListLimit);
         var siteList = siteService.getSitesList();
         ClientDto respond = new ClientDto();
@@ -96,7 +102,9 @@ public class ClientController {
     //@ResponseBody
     public ClientDto search(@PathVariable(value = "pattern") String pattern
             ,@PathVariable(value = "start") Integer start
-            ,Model model){
+            ,Model model
+    , HttpServletRequest request){
+        //System.out.println("request cookie : " + readServletCookie(request, "username"));
         System.out.println("search pattern : " + pattern);
         var map = catalogService.search(pattern, (long) (start * catalogListLimit), catalogListLimit);
         List<SiteBuilder> siteList = new ArrayList<>();
@@ -113,6 +121,13 @@ public class ClientController {
 
         return respond;
     }
+    public Optional<String> readServletCookie(HttpServletRequest request, String name){
+        return Arrays.stream(request.getCookies())
+                .filter(cookie->name.equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findAny();
+    }
+
 
 
 }

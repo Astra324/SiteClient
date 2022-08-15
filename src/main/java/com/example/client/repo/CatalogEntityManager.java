@@ -15,6 +15,7 @@ import java.util.List;
 public class CatalogEntityManager {
     private Long lastSavedId = 0L;
     private Integer limit = 0;
+
     @PersistenceContext
     private EntityManager entityManager;
 

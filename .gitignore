@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Bootstrap ###
+!**/src/main/resources/static/bootstrap-5.2.0-dist

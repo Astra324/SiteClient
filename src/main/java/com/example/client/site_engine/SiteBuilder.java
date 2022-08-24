@@ -14,7 +14,7 @@ public abstract class SiteBuilder {
     private final boolean isAggregated;
     private ArrayList<TagMap> tagMaps = new ArrayList<>();
 
-    public enum ParserTypes {CATALOG(), ARTICLE(), CONTENT(), AGGREGATE();}
+    public enum ParserTypes {CATALOG(), ARTICLE(), CONTENT(), AGGREGATE(), OPTIONAL;}
     public enum ViewTypes {CATALOG_VIEW, PAGE_VIEW;}
 
     public enum Sites {

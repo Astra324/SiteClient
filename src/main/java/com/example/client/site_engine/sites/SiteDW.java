@@ -65,7 +65,7 @@ public class SiteDW extends SiteBuilder {
             return (T) parseDoc(document);
         }
     };
-    private SiteParser pageParser = new SiteParser() {
+    private SiteParser pageParserOld = new SiteParser() {
         private final ArrayList<TagMap> articleMap = new ArrayList<>();
 
         @Override
@@ -113,11 +113,62 @@ public class SiteDW extends SiteBuilder {
             return (T) parseDoc(document);
         }
     };
+    private SiteParser pageParser = new SiteParser() {
+        private final ArrayList<TagMap> articleMap = new ArrayList<>();
+
+        @Override
+        public <T> T parseDoc(Document doc) {
+            articleMap.clear();
+            MyParser parser = new MyParser(Objects.requireNonNull(doc), getName());
+            AtomicInteger index = new AtomicInteger(0);
+            ArrayList<TagMap> pageContent = new ArrayList<>();
+
+            Element bodyContent = doc.getElementById("root");
+            Elements content = bodyContent.select("h1, p.teaser-text, img.lq-img, div.rich-text p, iframe, li:contains(Дата)");
+            for (Element el : content) {
+                TagMap newItem = new TagMap.Builder().buildEmpty().setSiteName(getName()).setId(index.getAndIncrement());
+                if (el.is("h1")) {
+                    String title = "<h1>" + el.text() + "</h1>";
+                    newItem.setTitle(title);
+                }
+                if (el.is("p.teaser-text")) {
+                    String title1 = "<h3>" + el.text() + "</h3>";
+                    newItem.setText(title1);
+                }
+                if (el.is("img.lq-img")) {
+                    String image = el.outerHtml();
+                    System.out.println("Image found : " + image);
+                    newItem.value(image);
+                }
+                if (el.is("div.rich-text p")) {
+                    String text = "<p>" + el.text() + "</p>";
+                    newItem.setText(text);
+                }
+                if (el.is("iframe")) {
+                    newItem.setVideo(el.outerHtml());
+                }
+                if (el.is("li:contains(Дата)")) {
+                    newItem.setDateString(el.text());
+                }
+                articleMap.add(newItem);
+            }
+            return (T) getArticleMap();
+        }
+        @Override
+        public ArrayList<TagMap> getArticleMap() {
+            return articleMap;
+        }
+        @Override
+        public <T> T test(Document document, String pattern) {
+            return (T) parseDoc(document);
+        }
+    };
     protected SiteDW(Builder builder) {
         super(builder);
         putSiteParser(ParserTypes.CATALOG, catalogParser);
         putSiteParser(ParserTypes.ARTICLE, pageParser);
         putSiteParser(ParserTypes.AGGREGATE, catalogParser);
+        putSiteParser(ParserTypes.OPTIONAL, pageParserOld);
 
         putSiteView(ViewTypes.CATALOG_VIEW, catalogView);
         putSiteView(ViewTypes.PAGE_VIEW, pageView);

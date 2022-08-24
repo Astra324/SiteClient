@@ -28,6 +28,18 @@ public class SiteService {
     public List<SiteBuilder> getSitesList(){
         return SiteBuilder.Sites.SITEMAP.map().values().stream().filter(SiteBuilder::isAggregated).toList();
     }
+    public List<SiteBuilder> getSitesListByUserMap(Byte[] siteMask){
+        var sites = getSitesList();
+        List<SiteBuilder> resultList = new ArrayList<>();
+        for (Byte bi : siteMask){
+            if(bi.intValue() >= 0){
+                resultList.add(sites.get(bi.intValue()));
+            }
+        }
+
+        return resultList;
+    }
+
     public SiteBuilder getSiteByName(String siteName){
         return SiteBuilder.Sites.SITEMAP.getSiteByName(siteName);
     }

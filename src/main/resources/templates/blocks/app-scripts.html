@@ -4,13 +4,17 @@
         import {loadClientData} from './app.js';
 
         window.currentUser = {
-              userName: '',
+            userName: '',
+            userAlias: '',
             currentIndex: 0,
             maxResultCount: 0,
             dataSource : '',
-            clientData: null
-
+            lastViewed : '',
+            siteMap : null,
+            clientData: null,
+            userProfile: null
         };
+
          window.maxResultCount = 1;
          window.dataSource = [[${data_source}]];
 
@@ -20,8 +24,11 @@
     </script>
 
     <script th:inline="javascript" type="module">
+    const appHost = "http://192.168.1.110:8080";
+        import {loadClientData} from './app.js';
         import {navigateClientData} from './app.js';
         import {prepareIndex} from './app.js';
+        import {getUserProfile} from './app.js';
 
         window.navigate = function navigate(direction) {                
                 let index = prepareIndex(direction);
@@ -40,6 +47,47 @@
                 let url = dataSource + '/' + searchInput.value;
                 navigateClientData(url, '0')
                 console.log("searching : " + url);
+        }
+         window.getUser = function getUser(){
+                document.querySelector('#main-navigation').hidden = true;
+                document.querySelector('#app-header-placeholder').hidden = true;
+                document.querySelector('#footer').hidden = true;
+
+                let url = '/app-user-profiler';
+                getUserProfile(url)
+                console.log("user profiler url : " + url);
+        }
+        window.backStep = function backStep(){
+            document.querySelector('#profile-control').hidden = true;
+            document.querySelector('#app-header-placeholder').hidden = false;
+            document.querySelector('#main-navigation').hidden = false;
+            document.querySelector('#footer').hidden = false;
+
+            window.userProfile = null;
+
+            let mainContainer = document.querySelector('#current-view');
+            let temp = mainContainer.innerHTML;
+
+            mainContainer.innerHTML = window.lastViewed ;
+
+            window.lastViewed = temp;
+        }
+        window.setCookie = function setCookie(username){
+            let date = new Date(Date.now() + 86400e3);
+            date = date.toUTCString();
+        
+            if(username != undefined){
+            let cookie = 'username=' + username + '; path=/; expires=' + date + '; samesite=strict;';
+               document.cookie = 'username=' + username + '; path=/; expires=' + date + '; samesite=strict;';
+               console.log("Set cookie : " + cookie);
+            }
+        }
+        window.reLogin = function reLogin(){
+            window.location.replace(appHost);
+        }
+        window.disableElement = function disableElement(id, state){
+            console.log('state : ' + state + ' id : ' + id);
+            document.getElementById(id).disabled = state;
         }
     </script>
 </div>

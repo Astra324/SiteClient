@@ -1,9 +1,9 @@
 package com.example.client.controllers;
 
+import com.example.client.exceptions.UserNotFoundException;
 import com.example.client.model.CatalogItem;
 import com.example.client.model.ClientDto;
 import com.example.client.model.User;
-import com.example.client.repo.UsersRepository;
 import com.example.client.services.CatalogService;
 import com.example.client.services.RestClientService;
 import com.example.client.services.SiteService;
@@ -12,15 +12,11 @@ import com.example.client.site_engine.SiteBuilder;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.view.RedirectView;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Controller
 public class AppController {
@@ -38,9 +35,11 @@ public class AppController {
     CatalogService catalogService;
     @Autowired
     RestClientService clientService;
-
     @Autowired
     UserService userService;
+    @Autowired
+    CopyOnWriteArrayList getLoggedUsers;
+
 
     @Value("${appHost}")
     private  String appHost;
@@ -55,37 +54,19 @@ public class AppController {
     @GetMapping("/")
     //@ResponseBody
     public String appStart(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession session) {
-        var map = catalogService.getAggregateMap(0,top5ListLimit);
-        var siteList = siteService.getSitesList();
         System.out.println("App host : " + appHost);
-
+        if(request.getCookies() != null){
+            System.out.println("cookie : " + readServletCookie(request, "username"));
+        }
         ClientDto respond = new ClientDto();
 
-        if(readServletCookie(request, "username").isPresent()) {
-            System.out.println("session id : " + session.getId());
-            System.out.println("request cookie : " + userService.getByUserName(readServletCookie(request, "username").get()).getUsername());
-            respond.setUserName(readServletCookie(request, "username").get());
-            response.addCookie(createCookie(readServletCookie(request, "username").get()));
+        User loginUser = getOrRegisterUser(request, session, response);
 
-        }else{
-            String newUserName =  session.getId() + "-" +System.currentTimeMillis() + "@anonymous";
-            response.addCookie(createCookie(newUserName));
-            String newUserPassword = session.getId();
-            User newUser = userService.registerNewUser(newUserName, newUserPassword, new Integer[]{0});
-            users.add(newUser);
-            respond.setUserName(newUserName);
-            System.out.println("New new set cookie : " + newUser.getUsername() + " id : " + newUser.getId());
-        }
+        var siteList = siteService.getSitesListByUserMap(loginUser.getSites());
+        var map = catalogService.getAggregateMap(siteList,0,top5ListLimit);
 
-
-        respond.setCaller("/");
-        respond.setDataSource("/app-data-top5");
-        respond.setMaxResultCount(catalogService.getMaxCount() / (top5ListLimit + siteList.size()));
-        respond.setCurrentIndex(0);
         respond.setSiteList(siteList);
-        respond.setDataMap(map);
-
-        model.addAttribute("user_name", respond.getUserName());
+        model.addAttribute("user_name", loginUser.getUsername());
         model.addAttribute("data_source", "/app-data-top5");
         model.addAttribute("root_link", "/");
         model.addAttribute("app_title", "Top 5 news");
@@ -106,16 +87,39 @@ public class AppController {
         return "/article_view";
     }
 
+    private User getOrRegisterUser(HttpServletRequest request, HttpSession session, HttpServletResponse response){
+
+        if(readServletCookie(request, "username").isPresent()) {
+            String resultUserName = readServletCookie(request, "username").get();
+            response.addCookie(createCookie(resultUserName));
+            //System.out.println(resultUserName);
+            User loginUser = Optional.ofNullable(userService.getByUserName(resultUserName)).orElseThrow(()->
+                    new UserNotFoundException("Error - user : " + resultUserName + " not found in database!"));
+            userService.addLoggedUser(loginUser);
+            return loginUser;
+        }else{
+            String newUserName =  session.getId() + "-" + System.currentTimeMillis() + "@anonymous";
+            response.addCookie(createCookie(newUserName));
+            String newUserPassword = session.getId();
+            User newUser = Optional.ofNullable(userService.registerNewUser(newUserName, newUserPassword)).orElseThrow(()->
+                    new UserNotFoundException("Error - user : " + newUserName + " cannot be added in database!"));
+            userService.addLoggedUser(newUser);
+            System.out.println("New user registered : " + newUser.toString());
+            return newUser;
+        }
+
+    }
     private Cookie createCookie(String userName){
         Cookie newCookie = new Cookie("username", userName);
-        newCookie.setPath("localhost:8080/");
-        newCookie.setSecure(true);
+        newCookie.setPath("/");
+        newCookie.setSecure(false);
         newCookie.setMaxAge(31536000);
         newCookie.setHttpOnly(false);
         return newCookie;
     }
 
-    public Optional<String> readServletCookie(HttpServletRequest request, String name){
+    private Optional<String> readServletCookie(HttpServletRequest request, String name){
+        if(request.getCookies() == null) return Optional.empty();
         return Arrays.stream(request.getCookies())
                 .filter(cookie->name.equals(cookie.getName()))
                 .map(Cookie::getValue)

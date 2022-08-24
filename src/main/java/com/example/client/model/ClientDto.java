@@ -16,6 +16,7 @@ public class ClientDto {
     @Getter @Setter private Integer currentIndex;
     @Getter @Setter private  String userName;
     @Getter @Setter private List<SiteBuilder> siteList;
+    @Getter @Setter private List<Integer> clientSiteMap;
     @Getter @Setter private LinkedHashMap<SiteBuilder, List<CatalogItem>> dataMap;
 
     @Override

@@ -1,11 +1,9 @@
-   import {writeDataBlockContainer} from './views.js';
-   //const appHost = "http://localhost:8080";
-   const appHost = "http://192.168.1.104:8080";
+   import {writeDataBlockContainer} from './views.js'; 
+   import {writeUserProfile} from './profileView.js';
+   const appHost = "http://192.168.1.110:8080";
 
    export async function loadClientData(data_source, startIndex){
-
-            var url = appHost + data_source + "/" + startIndex;
-
+            var url = appHost + data_source + "/" + startIndex + "/" + document.querySelector("#user-name").value;
             console.log(url);
 
             const response = await fetch(url, {
@@ -21,19 +19,21 @@
                 window.maxResultCount = data.maxResultCount;
                 window.dataSource = data.dataSource;
                 window.clientData = data;
-                console.log("params : current index : " + window.currentIndex + " data source : " + window.dataSource + " max count : " + maxResultCount);
-                console.log("User name : " + document.querySelector("#user-name").value);
+                window.siteMap = data.clientSiteMap;
+                console.log(data + ' \n userbane : ' + window.userName );
+
+                window.setCookie(window.userName);
                 writeDataBlockContainer();
             }
    }
 
    export async function navigateClientData(data_source, startIndex){
-   console.log('doc cookie - ' + document.cookie)
-            var url = appHost + data_source + "/" + startIndex;
+
+            var url = appHost + data_source + "/" + startIndex + "/" + window.userName;
             console.log("data source : " + url + " index : " + startIndex);
             const response = await fetch(url, {
-                method: "GET",
-                headers: { "Accept": "application/json" }
+                 method: 'GET',
+                 headers: {'Accept': 'application/json'}
             });
 
             if (response.ok === true) {
@@ -42,6 +42,7 @@
                 window.maxResultCount = data.maxResultCount;
                 window.dataSource = data.dataSource;
                 window.clientData = data;
+                window.siteMap = data.clientSiteMap;
                 console.log("params : current index : " + window.currentIndex + " data source : " + window.dataSource + " max count : " + maxResultCount);
                 let container = document.querySelector('div.container');
                 container.remove();
@@ -49,6 +50,22 @@
                 writeDataBlockContainer();
                 printInfo();
             }
+   }
+   export async function getUserProfile(url){
+                let response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json;charset=utf-8',
+                      'username' : window.userName
+                    },
+                  });
+
+                  if (response.ok === true) {
+                    window.userProfile = await response.json();
+                    window.userProfile.userAlias = window.userName.substring(window.userName.indexOf('@') + 1, window.userName.length);
+                    writeUserProfile();
+                    console.log('found user : ' + window.userProfile.user.username);
+                  }
    }
    function printInfo(){
                 var siteInfo = document.querySelector('#site_info');

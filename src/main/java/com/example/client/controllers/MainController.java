@@ -35,8 +35,9 @@ public class MainController {
     @GetMapping("/top5/{start}")
     //@ResponseBody
     public  String top10(@PathVariable(value = "start") Long start,Model model){
-        var map = catalogService.getAggregateMap(start * 5,5);
         var siteList = siteService.getSitesList();
+        var map = catalogService.getAggregateMap(siteList,start * 5,5);
+
         model.addAttribute("data_caller","/data_top5");
         model.addAttribute("caller_title", "Top 5 news");
         model.addAttribute("caller", "/top5");

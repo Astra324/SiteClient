@@ -1,5 +1,6 @@
 package com.example.client.services;
 
+import com.example.client.exceptions.DocumentLoadErrorException;
 import com.example.client.site_engine.SiteBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,14 +29,19 @@ public class RestClientService {
         Future<Document> result = null;
         result = singleThreadExecutor.submit(task);
         Document resultDoc = null;
+        String exceptionCause = "";
         try {
             resultDoc = result.get();
         } catch (InterruptedException e) {
+            exceptionCause = e.toString();
             e.printStackTrace();
         } catch (ExecutionException e) {
+            exceptionCause += e.toString();
             e.printStackTrace();
         }
-        return Optional.ofNullable(resultDoc).orElseThrow(() -> new NullPointerException("Load document fail from link : " + url));
+        String finalExceptionCause = exceptionCause;
+        return Optional.ofNullable(resultDoc).orElseThrow(
+                () -> new DocumentLoadErrorException("Document : " + url + " load error!" + finalExceptionCause));
     }
 
     private Document load(String uri) {

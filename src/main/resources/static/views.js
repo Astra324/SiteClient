@@ -1,9 +1,13 @@
 
 export function writeDataBlockContainer(){
+
             const siteList = window.clientData.siteList;
             let appHeader = document.querySelector('#app-header-placeholder');
             let mainContainer = document.createElement('div');
             mainContainer.className ="container";
+            mainContainer.id = "current-view"
+
+
 
             for(let siteObj of siteList){
                 let siteName = siteObj.name;

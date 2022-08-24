@@ -18,13 +18,10 @@ public class CatalogService {
     @Autowired
     CatalogEntityManager catalogQuery;
     @Autowired
-    CatalogRepository repository;
-    @Autowired
     ConcurrentHashMap catalogMap;
     @Autowired
     SiteService siteService;
-    @Autowired
-    ExecutorService fixedThreadPool;
+
 
 
 
@@ -34,9 +31,8 @@ public class CatalogService {
         return maxSearchResult;
     }
 
-    public LinkedHashMap<SiteBuilder, List<CatalogItem>> getAggregateMap(long startIndex, int limit){
+    public LinkedHashMap<SiteBuilder, List<CatalogItem>> getAggregateMap(List<SiteBuilder> sites, long startIndex, int limit){
         var resultMap = new LinkedHashMap<SiteBuilder, List<CatalogItem>>();
-        var sites = siteService.getSitesList();
         updateCatalogMap();
         List<CatalogItem> data = (ArrayList<CatalogItem>) catalogMap.values().stream().collect(Collectors.toList());
         for(SiteBuilder site : sites){
@@ -50,7 +46,7 @@ public class CatalogService {
             }else {
                 List<CatalogItem> preloadList = preloadCatalog(site, startIndex, limit);
                 if(preloadList != null) resultMap.put(site, preloadList);
-                System.out.println("catalog : " + site.getName() + " : is " +   catalogList.size() );
+                //System.out.println("catalog : " + site.getName() + " : is " +   catalogList.size() );
             }
         }
         return resultMap;

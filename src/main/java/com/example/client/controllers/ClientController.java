@@ -1,9 +1,11 @@
 package com.example.client.controllers;
 
 import com.example.client.model.ClientDto;
+import com.example.client.model.User;
 import com.example.client.services.CatalogService;
 import com.example.client.services.RestClientService;
 import com.example.client.services.SiteService;
+import com.example.client.services.UserService;
 import com.example.client.site_engine.SiteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 //@CrossOrigin(
@@ -51,7 +51,8 @@ public class ClientController {
     @Autowired
     CatalogService catalogService;
     @Autowired
-    RestClientService clientService;
+    UserService userService;
+
 
     @Value("${appHost}")
     private  String appHost;
@@ -60,13 +61,20 @@ public class ClientController {
     private final Integer top5ListLimit = 5;
 
 
-    @GetMapping("/app-data-top5/{start}")
+    @GetMapping("/app-data-top5/{start}/{username}")
     //@ResponseBody
-    public  ClientDto dataTop10(@PathVariable(value = "start") Integer start, Model model){
+    public  ClientDto dataTop10(
+            @PathVariable(value = "start") Integer start
+            ,@PathVariable(value = "username", required = false) String userName
+            , Model model){
 
-        var map = catalogService.getAggregateMap(start * top5ListLimit,top5ListLimit);
-        var siteList = siteService.getSitesList();
+        User currentUser = userService.getLoggedUserByName(userName).orElseThrow(NullPointerException::new);
+
+        var siteList = siteService.getSitesListByUserMap(currentUser.getSites());
+        var map = catalogService.getAggregateMap(siteList, start * top5ListLimit,top5ListLimit);
+
         ClientDto respond = new ClientDto();
+        respond.setClientSiteMap(Stream.of(currentUser.getSites()).map(Byte::intValue).collect(Collectors.toList()));
         respond.setAppHost(appHost);
         respond.setCurrentIndex(start);
         respond.setCaller("/app-data-top5");
@@ -78,12 +86,13 @@ public class ClientController {
         return respond;
     }
 
-    @GetMapping("/app-data-catalog/{site_name}/{start}")
+    @GetMapping("/app-data-catalog/{site_name}/{start}/{username}")
     //@ResponseBody
     public ClientDto dataCatalog(@PathVariable(value = "site_name") String siteName
             , @PathVariable(required = false, value = "start") Integer start
+            , @PathVariable(required = false, value = "username") String userName
             , Model model){
-        System.out.println(siteName);
+
         var map = catalogService.getCatalogMap(siteName, start * catalogListLimit, catalogListLimit);
         var siteList = siteService.getSitesList().stream().filter((e)->e.getName().equals(siteName)).collect(Collectors.toList());
 
@@ -98,14 +107,14 @@ public class ClientController {
         respond.setDataMap(map);
         return respond;
     }
-    @GetMapping("/app-data-search/{pattern}/{start}")
+    @GetMapping("/app-data-search/{pattern}/{start}/{username}")
     //@ResponseBody
     public ClientDto search(@PathVariable(value = "pattern") String pattern
             ,@PathVariable(value = "start") Integer start
+            ,@PathVariable(required = false, value = "username") String userName
             ,Model model
     , HttpServletRequest request){
-        //System.out.println("request cookie : " + readServletCookie(request, "username"));
-        System.out.println("search pattern : " + pattern);
+
         var map = catalogService.search(pattern, (long) (start * catalogListLimit), catalogListLimit);
         List<SiteBuilder> siteList = new ArrayList<>();
         siteList.add(siteService.getSiteByName("Search"));
@@ -121,13 +130,4 @@ public class ClientController {
 
         return respond;
     }
-    public Optional<String> readServletCookie(HttpServletRequest request, String name){
-        return Arrays.stream(request.getCookies())
-                .filter(cookie->name.equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findAny();
-    }
-
-
-
 }

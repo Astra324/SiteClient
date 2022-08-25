@@ -1,9 +1,8 @@
    import {writeDataBlockContainer} from './views.js'; 
    import {writeUserProfile} from './profileView.js';
-   const appHost = "http://192.168.1.110:8080";
 
    export async function loadClientData(data_source, startIndex){
-            var url = appHost + data_source + "/" + startIndex + "/" + document.querySelector("#user-name").value;
+            var url = window.appHost + data_source + "/" + startIndex + "/" + document.querySelector("#user-name").value;
             console.log(url);
 
             const response = await fetch(url, {
@@ -20,7 +19,7 @@
                 window.dataSource = data.dataSource;
                 window.clientData = data;
                 window.siteMap = data.clientSiteMap;
-                console.log(data + ' \n userbane : ' + window.userName );
+                console.log(data + ' \n logged user name : ' + window.userName );
 
                 window.setCookie(window.userName);
                 writeDataBlockContainer();
@@ -29,7 +28,7 @@
 
    export async function navigateClientData(data_source, startIndex){
 
-            var url = appHost + data_source + "/" + startIndex + "/" + window.userName;
+            var url = window.appHost + data_source + "/" + startIndex + "/" + window.userName;
             console.log("data source : " + url + " index : " + startIndex);
             const response = await fetch(url, {
                  method: 'GET',
@@ -51,6 +50,11 @@
                 printInfo();
             }
    }
+   export async function addFavorites(url, articleId){
+        let formatUrl = url + "/" + window.userName + "/" + articleId;
+        let response = await fetch(formatUrl);
+        console.log("Favorite added : " + response.status);
+  }
    export async function getUserProfile(url){
                 let response = await fetch(url, {
                     method: 'POST',

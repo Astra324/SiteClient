@@ -1,6 +1,8 @@
 package com.example.client.controllers;
 
+import com.example.client.model.CatalogItem;
 import com.example.client.model.ClientDto;
+import com.example.client.model.Favorites;
 import com.example.client.model.User;
 import com.example.client.services.CatalogService;
 import com.example.client.services.RestClientService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -74,6 +77,7 @@ public class ClientController {
         var map = catalogService.getAggregateMap(siteList, start * top5ListLimit,top5ListLimit);
 
         ClientDto respond = new ClientDto();
+
         respond.setClientSiteMap(Stream.of(currentUser.getSites()).map(Byte::intValue).collect(Collectors.toList()));
         respond.setAppHost(appHost);
         respond.setCurrentIndex(start);
@@ -81,6 +85,7 @@ public class ClientController {
         respond.setDataSource("/app-data-top5");
         respond.setMaxResultCount(catalogService.getMaxCount() / (top5ListLimit + siteList.size()));
         respond.setSiteList(siteList);
+        respond.setFavorites(currentUser.getFavorites());
         respond.setDataMap(map);
 
         return respond;
@@ -93,6 +98,8 @@ public class ClientController {
             , @PathVariable(required = false, value = "username") String userName
             , Model model){
 
+        User currentUser = userService.getLoggedUserByName(userName).orElseThrow(NullPointerException::new);
+
         var map = catalogService.getCatalogMap(siteName, start * catalogListLimit, catalogListLimit);
         var siteList = siteService.getSitesList().stream().filter((e)->e.getName().equals(siteName)).collect(Collectors.toList());
 
@@ -104,6 +111,7 @@ public class ClientController {
         Long maxResult =  Integer.toUnsignedLong(catalogService.maxResultCount(siteName) / catalogListLimit);
         respond.setMaxResultCount(maxResult);
         respond.setSiteList(siteList);
+        respond.setFavorites(currentUser.getFavorites());
         respond.setDataMap(map);
         return respond;
     }
@@ -114,6 +122,8 @@ public class ClientController {
             ,@PathVariable(required = false, value = "username") String userName
             ,Model model
     , HttpServletRequest request){
+
+        User currentUser = userService.getLoggedUserByName(userName).orElseThrow(NullPointerException::new);
 
         var map = catalogService.search(pattern, (long) (start * catalogListLimit), catalogListLimit);
         List<SiteBuilder> siteList = new ArrayList<>();
@@ -126,8 +136,29 @@ public class ClientController {
         respond.setCurrentIndex(start);
         respond.setMaxResultCount((long) (catalogService.getMaxSearchResult() / catalogListLimit));
         respond.setSiteList(siteList);
+        respond.setFavorites(currentUser.getFavorites());
         respond.setDataMap(map);
 
         return respond;
+    }
+    @GetMapping("/app-user-add-favorites/{username}/{articleId}")
+    @ResponseBody
+    public String addFavorites(HttpServletResponse response,
+                                          @PathVariable(name = "articleId") Long articleId
+            , @PathVariable(name = "username") String username){
+        response.setHeader("result", "1");
+
+        User currentUser = userService.getLoggedUserByName(username).orElseThrow(NullPointerException::new);
+
+            Favorites newFavorites = new Favorites();
+            newFavorites.setUserId(currentUser.getId());
+            newFavorites.setItemId(articleId);
+            newFavorites.setDateAdded(new Date(System.currentTimeMillis()));
+            newFavorites.setTimestamp(System.currentTimeMillis());
+            userService.saveFavorites(newFavorites);
+            userService.updateLoggedUser(currentUser);
+
+        System.out.println("favorites added article : " + username + " article id " + articleId);
+        return  "";
     }
 }

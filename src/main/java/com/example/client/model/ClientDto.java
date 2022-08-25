@@ -7,17 +7,19 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-
+@Getter @Setter
 public class ClientDto {
-    @Getter @Setter private  String appHost;
-    @Getter @Setter private String caller;
-    @Getter @Setter private String dataSource;
-    @Getter @Setter private Long maxResultCount;
-    @Getter @Setter private Integer currentIndex;
-    @Getter @Setter private  String userName;
-    @Getter @Setter private List<SiteBuilder> siteList;
-    @Getter @Setter private List<Integer> clientSiteMap;
-    @Getter @Setter private LinkedHashMap<SiteBuilder, List<CatalogItem>> dataMap;
+    private  String appHost;
+    private String caller;
+    private String dataSource;
+    private Long maxResultCount;
+    private Integer currentIndex;
+    private  String userName;
+    private List<SiteBuilder> siteList;
+    private List<Integer> clientSiteMap;
+    private List<CatalogItem> favorites;
+    private LinkedHashMap<SiteBuilder, List<CatalogItem>> dataMap;
+
 
     @Override
     public String toString() {

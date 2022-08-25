@@ -2,12 +2,10 @@ package com.example.client.services;
 
 
 import com.example.client.exceptions.UserNotFoundException;
-import com.example.client.model.Role;
-import com.example.client.model.Roles;
-import com.example.client.model.User;
-import com.example.client.model.UserProfileDto;
+import com.example.client.model.*;
 
 
+import com.example.client.repo.FavoritesRepository;
 import com.example.client.repo.RoleRepository;
 import com.example.client.repo.UserProfileEntityManager;
 import com.example.client.repo.UsersRepository;
@@ -26,7 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class UserService {
-
+    @Autowired
+    FavoritesRepository favoritesRepository;
     @Autowired
     UsersRepository usersRepository;
 
@@ -43,19 +42,29 @@ public class UserService {
     CopyOnWriteArrayList getLoggedUsers;
 
 
+    public void saveFavorites( Favorites favorites){
+        if(!favoritesRepository.ifExists(favorites.getUserId(), favorites.getItemId())) {
+            favoritesRepository.save(favorites);
+        }
+    }
+
     public void addLoggedUser(User loggedUser){
         if(!isUserExists(loggedUser)) {
             getLoggedUsers.add(loggedUser);
 
         }
-
-
     }
     public void updateLoggedUser(User loggedUser){
-        List<User> loggedUsers = (List<User>) getLoggedUsers.clone();
-        for(User user : loggedUsers){
-            if(user.getUsername().equals(loggedUser.getUsername())){
-                user = loggedUser;
+        List<User> loggedUsers= (List<User>) getLoggedUsers.clone();
+        for(int i = 0; i < loggedUsers.size(); i++){
+            if(loggedUsers.get(i).getId() == loggedUser.getId()){
+                Optional<User> updatedUser = usersRepository.findById(loggedUser.getId());
+                if(updatedUser.isPresent()) {
+                    getLoggedUsers.set(i, updatedUser.get());
+                    System.out.println(updatedUser);
+                }else{
+                    throw new UserNotFoundException();
+                }
             }
         }
     }

@@ -4,6 +4,7 @@
         import {loadClientData} from './app.js';
 
         window.currentUser = {
+            appHost : '',
             userName: '',
             userAlias: '',
             currentIndex: 0,
@@ -17,6 +18,7 @@
 
          window.maxResultCount = 1;
          window.dataSource = [[${data_source}]];
+         window.appHost = "http://192.168.1.110:8080";
 
         document.addEventListener("DOMContentLoaded", function() {
             loadClientData(window.dataSource, 0);
@@ -24,11 +26,18 @@
     </script>
 
     <script th:inline="javascript" type="module">
-    const appHost = "http://192.168.1.110:8080";
+
         import {loadClientData} from './app.js';
         import {navigateClientData} from './app.js';
         import {prepareIndex} from './app.js';
         import {getUserProfile} from './app.js';
+        import {addFavorites} from './app.js';
+
+        window.addUserFavorites = function addUserFavorites(dataSource, articleId){
+            let url = window.appHost + dataSource;
+            addFavorites (url, articleId);
+            disableElement('favorite-id-' + articleId, true);
+        }
 
         window.navigate = function navigate(direction) {                
                 let index = prepareIndex(direction);
@@ -83,11 +92,22 @@
             }
         }
         window.reLogin = function reLogin(){
-            window.location.replace(appHost);
+            window.location.replace(window.appHost);
+        }
+        window.removeElement = function removeElement(id){
+
+            document.getElementById(id).remove();
         }
         window.disableElement = function disableElement(id, state){
             console.log('state : ' + state + ' id : ' + id);
             document.getElementById(id).disabled = state;
+        }
+        window.existsFavorite = function existsFavorite(favoriteId){
+
+            for( let item of window.clientData.favorites){
+                    if(favoriteId == item.id) return true;
+            }
+            return false;
         }
     </script>
 </div>

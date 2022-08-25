@@ -28,9 +28,17 @@ public class HtmlTemplatesRepo {
     }
 
 
-    public String getTemplate(String templateName, Function<String, String> post){
+    public String getTemplateWithHeaderBody(String templateName, Function<String, String> post){
         String template = Optional.ofNullable(templates.get(templateName)).orElseThrow(NullPointerException::new);
-        return post.apply(template);
+        String applyTemplate = post.apply(template);
+        String withHeadResult = "<!DOCTYPE HTML>\n" +
+                "<html xmlns:th=\"http://www.thymeleaf.org\">\n" +
+                "<head>"
+                + templates.get("header")
+                + "</head><body>"
+                + applyTemplate
+                +"</body></html>";
+        return withHeadResult;
     }
 
     public String loadTemplateData( String fileName){

@@ -58,6 +58,7 @@ public class User {
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "item_id", referencedColumnName = "id"))
+
     @Getter @Setter private List<CatalogItem> favorites = new ArrayList<>();
 
     @Override

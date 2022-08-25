@@ -74,11 +74,25 @@ export function writeDataBlockContainer(){
                     articleDataLink.id = "article_data_link";
                     articleDataLink.href = "/articles/" + catalogItem.id;
 
-                    let date = document.createElement('p');
+                    let addFavorites = document.createElement('button');
+                    //addFavorites.href = appHost + "/app-user-add-favorites/" + catalogItem.id;
+                    addFavorites.setAttribute('onclick', "window.addUserFavorites('/app-user-add-favorites', " + catalogItem.id +")");
+                    addFavorites.id = "favorite-id-" + catalogItem.id;
+                    addFavorites.textContent  = "View latter";
+                    addFavorites.className = "btn btn-secondary btn-sm  me-2 mb-2";
+                    if(window.existsFavorite(catalogItem.id)){
+                         addFavorites.disabled = true;
+                    }
+                    cardBody.append(addFavorites);
+
+
+                    let date = document.createElement('b');
                     date.className = "card-text text-muted mb-1";
                     date.id = "item_date";
                     date.textContent = catalogItem.postDate;
                     cardBody.append(date);
+
+
 
                     let title = document.createElement('h6');
                     title.className = "card-title";

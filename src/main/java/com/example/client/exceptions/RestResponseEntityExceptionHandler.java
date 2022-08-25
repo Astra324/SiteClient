@@ -1,6 +1,5 @@
 package com.example.client.exceptions;
 
-import com.example.client.exceptions.UserNotFoundException;
 import com.example.client.repo.HtmlTemplatesRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +20,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             = { UserNotFoundException.class})
     protected ResponseEntity<Object> handleUserNotFound(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = htmlTemplatesRepo.getTemplate("user-not-found-resolve-form", (body)->{
+        String bodyOfResponse = htmlTemplatesRepo.getTemplateWithHeaderBody("user-not-found-resolve-form", (body)->{
             String message = "<div class=\"alert\"><h4 class=\"text-muted\">" + ex.getMessage() + "</h4><div>";
             return message + body;
         });
@@ -33,7 +32,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             = { DocumentLoadErrorException.class })
     protected ResponseEntity<Object> handleDocumentLoadError(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = htmlTemplatesRepo.getTemplate("user-not-found-resolve-form", (body)->{
+        String bodyOfResponse = htmlTemplatesRepo.getTemplateWithHeaderBody("user-not-found-resolve-form", (body)->{
             String message = "<div class=\"alert\"><h4 class=\"text-muted\">" + ex.getMessage() + "</h4><div>";
             return message;
         });

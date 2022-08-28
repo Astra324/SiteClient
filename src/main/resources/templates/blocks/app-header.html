@@ -33,29 +33,12 @@
                     <div class="vr bg-light ms-3"></div>
 
                     <li class="nav-item ms-3 mt-1">
-                        <div id="navigator"  class="btn-group position-relative start-0">
 
-                            <button id="left" onclick="window.navigate('left')"
-                                    type="button"
-                                    class="btn btn-sm btn-outline-secondary">&lt&lt&lt Preview&nbsp</button>
-
-
-                            <div class="vr bg-light ms-1"></div>
-
-                            <div class="vr bg-light ms-1"></div>
-
-
-                            <button id="right" onclick="window.navigate('right')"
-                                    type="button"
-                                    class="btn btn-sm btn-outline-secondary">&nbsp&nbsp&nbsp&nbspNext &gt&gt&gt</button>
-                        </div>
                     </li>
                     <li class="nav-item ms-3 mt-1">
                         <b th:text="${user_name}"></b>
                     </li>
                 </ul>
-
-
 
                 <div class="input-group mb-1" style="max-width: 350px;">
                     <input id="search-input" type="text" class="form-control" placeholder="Write search pattern"
@@ -66,19 +49,34 @@
             </div>
         </div>
     </nav>
+    <br>
+
 
     <nav id="footer" class="navbar fixed-bottom navbar-dark bg-dark justify-content-center opacity-75"
          aria-label="Пример навигации по страницам" style="height: 50px;">
-        <ul class="navbar-nav me-auto mb-sm-0">
+        <ul class="navbar-nav me-auto mb-sm-2">
             <li class="nav-item ms-5 mt-1">
 
                 <button id="profile" onclick="window.getUser()"
                         type="button"
                         class="btn btn-sm btn-outline-secondary">User profile</button>
-
+                <div class="vr bg-light ms-1 me-1"></div>
+                <button id="favorites" onclick="window.navigateFavorites()"
+                        type="button"
+                        class="btn btn-sm btn-outline-secondary">View deferred</button>
             </li>
         </ul>
 
+        <button id="left" onclick="window.navigate('left')"
+                type="button"
+                class="btn btn-sm btn-outline-secondary">&lt&lt&lt Preview&nbsp</button>
+
+
+
+        <button id="right" onclick="window.navigate('right')"
+                type="button"
+                class="btn btn-sm btn-outline-secondary  ms-2">&nbsp&nbsp&nbsp&nbspNext &gt&gt&gt</button>
+        <div class="vr bg-light ms-3 me-3"></div>
     </nav>
 
 

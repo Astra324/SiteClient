@@ -78,7 +78,7 @@ export function writeDataBlockContainer(){
                     //addFavorites.href = appHost + "/app-user-add-favorites/" + catalogItem.id;
                     addFavorites.setAttribute('onclick', "window.addUserFavorites('/app-user-add-favorites', " + catalogItem.id +")");
                     addFavorites.id = "favorite-id-" + catalogItem.id;
-                    addFavorites.textContent  = "View latter";
+                    addFavorites.textContent  = "View later";
                     addFavorites.className = "btn btn-secondary btn-sm  me-2 mb-2";
                     if(window.existsFavorite(catalogItem.id)){
                          addFavorites.disabled = true;

@@ -122,10 +122,6 @@ window.applyAlias = function applyAlias(){
         let btnChange = document.querySelector('#button-alias');
         btnChange.textContent = 'Change';
         btnChange.setAttribute('onclick', 'onChangeAliasEnabled()');
-
-
-
-
 }
 window.updateUserProfile = function updateUserProfile() {
     let backBtn = document.querySelector("#button-back");

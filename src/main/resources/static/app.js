@@ -1,5 +1,7 @@
    import {writeDataBlockContainer} from './views.js'; 
    import {writeUserProfile} from './profileView.js';
+   import {writeFavoritesBlockContainer} from './favorites_view.js';
+
 
    export async function loadClientData(data_source, startIndex){
             var url = window.appHost + data_source + "/" + startIndex + "/" + document.querySelector("#user-name").value;
@@ -19,6 +21,7 @@
                 window.dataSource = data.dataSource;
                 window.clientData = data;
                 window.siteMap = data.clientSiteMap;
+                
                 console.log(data + ' \n logged user name : ' + window.userName );
 
                 window.setCookie(window.userName);
@@ -50,6 +53,22 @@
                 printInfo();
             }
    }
+   export async function navigateFavoritesData(data_source){
+
+               var url = window.appHost + data_source + "/" + window.userName;
+               console.log("data source : " + url);
+               const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {'Accept': 'application/json'}
+               });
+
+               if (response.ok === true) {
+                   const data = await response.json();
+                   console.log(data);
+                   window.favoritesMap = data;
+                   writeFavoritesBlockContainer();
+               }
+      }
    export async function addFavorites(url, articleId){
         let formatUrl = url + "/" + window.userName + "/" + articleId;
         let response = await fetch(formatUrl);

@@ -19,6 +19,7 @@ public class ClientDto {
     private List<Integer> clientSiteMap;
     private List<CatalogItem> favorites;
     private LinkedHashMap<SiteBuilder, List<CatalogItem>> dataMap;
+    private LinkedHashMap<ListTitle, List<CatalogItem>> favoritesMap;
 
 
     @Override

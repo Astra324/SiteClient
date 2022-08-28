@@ -31,12 +31,17 @@
         import {navigateClientData} from './app.js';
         import {prepareIndex} from './app.js';
         import {getUserProfile} from './app.js';
-        import {addFavorites} from './app.js';
+        import {addFavorites} from './app.js'; navigateFavoritesData
+        import {navigateFavoritesData} from './app.js';
 
         window.addUserFavorites = function addUserFavorites(dataSource, articleId){
             let url = window.appHost + dataSource;
             addFavorites (url, articleId);
             disableElement('favorite-id-' + articleId, true);
+        }
+
+        window.navigateFavorites = function navigateFavorites(){
+            navigateFavoritesData('/app-data-favorites');
         }
 
         window.navigate = function navigate(direction) {                
@@ -95,7 +100,6 @@
             window.location.replace(window.appHost);
         }
         window.removeElement = function removeElement(id){
-
             document.getElementById(id).remove();
         }
         window.disableElement = function disableElement(id, state){
@@ -103,11 +107,12 @@
             document.getElementById(id).disabled = state;
         }
         window.existsFavorite = function existsFavorite(favoriteId){
-
             for( let item of window.clientData.favorites){
                     if(favoriteId == item.id) return true;
             }
             return false;
         }
+
+
     </script>
 </div>

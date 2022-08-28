@@ -23,8 +23,6 @@ public class CatalogService {
     SiteService siteService;
 
 
-
-
     private Integer maxSearchResult;
 
     public Integer getMaxSearchResult() {

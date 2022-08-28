@@ -1,13 +1,7 @@
 package com.example.client.controllers;
 
-import com.example.client.model.CatalogItem;
-import com.example.client.model.ClientDto;
-import com.example.client.model.Favorites;
-import com.example.client.model.User;
-import com.example.client.services.CatalogService;
-import com.example.client.services.RestClientService;
-import com.example.client.services.SiteService;
-import com.example.client.services.UserService;
+import com.example.client.model.*;
+import com.example.client.services.*;
 import com.example.client.site_engine.SiteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +49,9 @@ public class ClientController {
     CatalogService catalogService;
     @Autowired
     UserService userService;
+
+    @Autowired
+    FavoritesService favoritesService;
 
 
     @Value("${appHost}")
@@ -141,8 +138,14 @@ public class ClientController {
 
         return respond;
     }
+    @GetMapping("/app-data-favorites/{username}")
+    public Map<String, List<CatalogItem>> getFavorites(@PathVariable(name = "username") String username, Model model){
+        System.out.println(username);
+        User currentUser = userService.getLoggedUserByName(username).orElseThrow(NullPointerException::new);
+        return favoritesService.getUserFavorites(username);
+    }
+
     @GetMapping("/app-user-add-favorites/{username}/{articleId}")
-    @ResponseBody
     public String addFavorites(HttpServletResponse response,
                                           @PathVariable(name = "articleId") Long articleId
             , @PathVariable(name = "username") String username){

@@ -30,7 +30,7 @@ public class UserProfileController {
     @PostMapping("/app-user-profiler-update")
     public UserProfileDto updateUserProfile(@RequestBody String data, HttpServletRequest request, HttpServletResponse response){
         UserProfileDto profile = null;
-        System.out.println("User : " +  request.getHeader("username")+ " ask profile.");
+        System.out.println("User : " +  request.getHeader("username")+ " ask profile update.");
         System.out.println("Request body : " + data);
 
         String userName = request.getHeader("username");

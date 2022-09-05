@@ -40,8 +40,9 @@ public class RestClientService {
             e.printStackTrace();
         }
         String finalExceptionCause = exceptionCause;
+
         return Optional.ofNullable(resultDoc).orElseThrow(
-                () -> new DocumentLoadErrorException("Document : " + url + " load error!" + finalExceptionCause));
+                () -> new DocumentLoadErrorException(url));
     }
 
     private Document load(String uri) {

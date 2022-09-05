@@ -6,12 +6,17 @@ export function writeDataBlockContainer(){
             let mainContainer = document.createElement('div');
             mainContainer.className ="container";
             mainContainer.id = "current-view"
+            mainContainer.style = "animation: 5s show ease;"
 
 
 
             for(let siteObj of siteList){
                 let siteName = siteObj.name;
+                console.log("Site name " + siteName);
                 let dataList = window.clientData.dataMap[siteName];
+                if(dataList == undefined){
+                    continue;
+                }
 
                 let siteTitleBox = document.createElement('div');
                 siteTitleBox.className = "alert mt-3 p-3";

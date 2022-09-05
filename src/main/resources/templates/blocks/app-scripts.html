@@ -12,8 +12,8 @@
             dataSource : '',
             lastViewed : '',
             siteMap : null,
-            clientData: null,
-            userProfile: null
+            clientData : null,
+            userProfile : null
         };
 
          window.maxResultCount = 1;
@@ -32,7 +32,7 @@
         import {prepareIndex} from './app.js';
         import {getUserProfile} from './app.js';
         import {addFavorites} from './app.js'; navigateFavoritesData
-        import {navigateFavoritesData} from './app.js';
+        import {navigateFavoritesData, navigateClientUrl} from './app.js';
 
         window.addUserFavorites = function addUserFavorites(dataSource, articleId){
             let url = window.appHost + dataSource;
@@ -41,6 +41,7 @@
         }
 
         window.navigateFavorites = function navigateFavorites(){
+            hideMainControl();
             navigateFavoritesData('/app-data-favorites');
         }
 
@@ -62,21 +63,30 @@
                 navigateClientData(url, '0')
                 console.log("searching : " + url);
         }
-         window.getUser = function getUser(){
+        window.hideMainControl = function hideMainControl(){
                 document.querySelector('#main-navigation').hidden = true;
                 document.querySelector('#app-header-placeholder').hidden = true;
                 document.querySelector('#footer').hidden = true;
+                document.querySelector('#navigate-control-left').hidden = true;
+                document.querySelector('#navigate-control-right').hidden = true;
+        }
+        window.showMainControl = function showMainControl(){
+            document.querySelector('#app-header-placeholder').hidden = false;
+            document.querySelector('#main-navigation').hidden = false;
+            document.querySelector('#footer').hidden = false;
+            document.querySelector('#navigate-control-left').hidden = false;
+            document.querySelector('#navigate-control-right').hidden = false;
+        }
 
+         window.getUser = function getUser(){
+                hideMainControl();
                 let url = '/app-user-profiler';
                 getUserProfile(url)
                 console.log("user profiler url : " + url);
         }
         window.backStep = function backStep(){
-            document.querySelector('#profile-control').hidden = true;
-            document.querySelector('#app-header-placeholder').hidden = false;
-            document.querySelector('#main-navigation').hidden = false;
-            document.querySelector('#footer').hidden = false;
-
+            //document.querySelector('#profile-control').hidden = true;
+            showMainControl();
             window.userProfile = null;
 
             let mainContainer = document.querySelector('#current-view');
@@ -87,13 +97,13 @@
             window.lastViewed = temp;
         }
         window.setCookie = function setCookie(username){
-            let date = new Date(Date.now() + 86400e3);
+            let date = new Date(Date.now() + 31536000);
             date = date.toUTCString();
         
             if(username != undefined){
-            let cookie = 'username=' + username + '; path=/; expires=' + date + '; samesite=strict;';
-               document.cookie = 'username=' + username + '; path=/; expires=' + date + '; samesite=strict;';
-               console.log("Set cookie : " + cookie);
+            let cookie = 'username=' + username + '; path=/; expires=' + date + '; SameSite=Lax;'
+               document.cookie = 'username=' + username + '; path=/; expires=' + date + ';'
+               console.log("Set cookie : " + document.cookie);
             }
         }
         window.reLogin = function reLogin(){
@@ -111,6 +121,26 @@
                     if(favoriteId == item.id) return true;
             }
             return false;
+        }
+        window.navigateClientInputUrl = function navigateClientInputUrl(dataSource){
+            let url = document.querySelector('#navigate-url-input').value;
+            navigateClientUrl(dataSource, url);
+
+        }
+        window.urlInputSwitcher = function urlInputSwitcher(){
+            let switcher = document.querySelector('#input-switcher');
+            let navInput = document.querySelector('#navigate-url-input');
+            if(switcher.checked !== true){
+                console.log("unchecked");
+                switcher.setAttribute('checked', true);
+                navInput.value = 'https://www.pornhub.com/video/search?search=beauty&page=1';
+
+            }else{
+                switcher.setAttribute('checked', false);
+                navInput.value = 'https://www.pornhub.com/video?page=1';
+                console.log("checked");
+            }
+
         }
 
 

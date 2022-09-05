@@ -31,7 +31,7 @@ public class FavoritesServiceTest {
         User user = userService.getByUserName("7E31BF86C0AE496FAA54F073A7D22339-1661367633681@admin--");
         List<CatalogItem> catalogItems = user.getFavorites();
 
-        List<Favorites> favorites = favoritesRepository.findByUserId(user.getId());
+        List<Favorites> favorites = favoritesRepository.findByUserIdOrderByDateAddedDesc(user.getId());
         var titles = favorites.stream().map(e->e.getDateAdded()).distinct().sorted().collect(Collectors.toList());
 
         var dataMap = new LinkedHashMap<ListTitle, List<CatalogItem>>();

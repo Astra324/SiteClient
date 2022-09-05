@@ -5,6 +5,17 @@
 
     <script th:inline="javascript" src="/views.js" type="module"></script>
     <script th:inline="javascript" src="/app.js" type="module"></script>
+    <style>
+        .container {
+            animation-name: show;
+            animation-duration: 1s;
+            animation-timing-function: ease-in;
+        }
+        @keyframes show {
+            0% { opacity: 0;}
+            25% { opacity: 1;}
+        }
+    </style>
 
 
     <nav id="main-navigation" class="navbar navbar-expand-sm fixed-top navbar-dark bg-dark bg-gradient opacity-100"
@@ -28,7 +39,9 @@
                     </li>
                     <div class="vr bg-light ms-3"></div>
                     <li class="nav-item ">
+
                         <h4 id="navigated-title" th:text="${app_title}" class="text-light ms-3 mt-1"></h4>
+
                     </li>
                     <div class="vr bg-light ms-3"></div>
 
@@ -67,16 +80,16 @@
             </li>
         </ul>
 
-        <button id="left" onclick="window.navigate('left')"
-                type="button"
-                class="btn btn-sm btn-outline-secondary">&lt&lt&lt Preview&nbsp</button>
+<!--        <button id="left" onclick="window.navigate('left')"-->
+<!--                type="button"-->
+<!--                class="btn btn-sm btn-outline-secondary">&lt&lt&lt Preview&nbsp</button>-->
 
 
 
-        <button id="right" onclick="window.navigate('right')"
-                type="button"
-                class="btn btn-sm btn-outline-secondary  ms-2">&nbsp&nbsp&nbsp&nbspNext &gt&gt&gt</button>
-        <div class="vr bg-light ms-3 me-3"></div>
+<!--        <button id="right" onclick="window.navigate('right')"-->
+<!--                type="button"-->
+<!--                class="btn btn-sm btn-outline-secondary  ms-2">&nbsp&nbsp&nbsp&nbspNext &gt&gt&gt</button>-->
+<!--        <div class="vr bg-light ms-3 me-3"></div>-->
     </nav>
 
 

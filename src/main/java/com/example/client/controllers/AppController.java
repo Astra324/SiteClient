@@ -115,6 +115,7 @@ public class AppController {
         newCookie.setSecure(false);
         newCookie.setMaxAge(31536000);
         newCookie.setHttpOnly(false);
+
         return newCookie;
     }
 

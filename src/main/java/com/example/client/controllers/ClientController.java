@@ -72,6 +72,8 @@ public class ClientController {
 
         var siteList = siteService.getSitesListByUserMap(currentUser.getSites());
         var map = catalogService.getAggregateMap(siteList, start * top5ListLimit,top5ListLimit);
+        System.out.println("data map : " + map.toString() + "\n : " + userName + " : " + start);
+        System.out.println("Site list : " + siteList);
 
         ClientDto respond = new ClientDto();
 

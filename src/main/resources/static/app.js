@@ -69,6 +69,24 @@
                    writeFavoritesBlockContainer();
                }
       }
+    export async function navigateClientUrl(dataSource, url){
+
+                     console.log("client url : " + dataSource + " : " +  url);
+
+                let response = await fetch(dataSource, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json;charset=utf-8',
+                      'url' : url
+                    },
+                  });
+
+                     if (response.ok === true) {
+                         const responseStatus = await response.text();
+                         console.log(responseStatus)
+                         window.navigateClientCatalogData("/app-data-catalog/", "SitePH", 0);
+                     }
+    }
    export async function addFavorites(url, articleId){
         let formatUrl = url + "/" + window.userName + "/" + articleId;
         let response = await fetch(formatUrl);

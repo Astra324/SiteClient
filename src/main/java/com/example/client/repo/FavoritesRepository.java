@@ -14,9 +14,10 @@ import java.util.List;
 
 public interface FavoritesRepository extends CrudRepository<Favorites, Long> {
 
-    List<Favorites> findByUserId(Long userId);
+    List<Favorites> findByUserIdOrderByDateAddedDesc(Long userId);
 
     Favorites findByUserIdAndItemId(Long userId, Long itemId);
+    Favorites findByUserIdAndItemIdOrderByDateAddedDesc(Long userId, Long itemId);
 
      default Boolean ifExists(Long userId, Long itemId){
          Favorites res = findByUserIdAndItemId(userId, itemId);

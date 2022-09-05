@@ -1,9 +1,7 @@
 package com.example.client.services;
 
-import com.example.client.exceptions.UserNotFoundException;
 import com.example.client.model.CatalogItem;
 import com.example.client.model.Favorites;
-import com.example.client.model.ListTitle;
 import com.example.client.model.User;
 import com.example.client.repo.FavoritesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +27,8 @@ public class FavoritesService {
         User user = userService.getLoggedUserByName(username).orElseThrow(NullPointerException::new);
         List<CatalogItem> catalogItems = user.getFavorites();
 
-        List<Favorites> favorites = favoritesRepository.findByUserId(user.getId());
-        var titles = favorites.stream().map(e->e.getDateAdded()).distinct().sorted().collect(Collectors.toList());
+        List<Favorites> favorites = favoritesRepository.findByUserIdOrderByDateAddedDesc(user.getId());
+        var titles = favorites.stream().map(e->e.getDateAdded()).distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 
         var dataMap = new LinkedHashMap<String, List<CatalogItem>>();
 

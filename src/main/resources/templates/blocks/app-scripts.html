@@ -97,12 +97,14 @@
             window.lastViewed = temp;
         }
         window.setCookie = function setCookie(username){
-            let date = new Date(Date.now() + 31536000);
+            let date = new Date(Date.now() + 8644400e3);
             date = date.toUTCString();
         
             if(username != undefined){
-            let cookie = 'username=' + username + '; path=/; expires=' + date + '; SameSite=Lax;'
-               document.cookie = 'username=' + username + '; path=/; expires=' + date + ';'
+               document.cookie = "username=" + username;
+               document.cookie  =  "path=/";
+               document.cookie  = "expires=" + date;
+               document.cookie = "sameSite=Lax";
                console.log("Set cookie : " + document.cookie);
             }
         }
@@ -122,27 +124,6 @@
             }
             return false;
         }
-        window.navigateClientInputUrl = function navigateClientInputUrl(dataSource){
-            let url = document.querySelector('#navigate-url-input').value;
-            navigateClientUrl(dataSource, url);
-
-        }
-        window.urlInputSwitcher = function urlInputSwitcher(){
-            let switcher = document.querySelector('#input-switcher');
-            let navInput = document.querySelector('#navigate-url-input');
-            if(switcher.checked !== true){
-                console.log("unchecked");
-                switcher.setAttribute('checked', true);
-                navInput.value = 'https://www.pornhub.com/video/search?search=beauty&page=1';
-
-            }else{
-                switcher.setAttribute('checked', false);
-                navInput.value = 'https://www.pornhub.com/video?page=1';
-                console.log("checked");
-            }
-
-        }
-
 
     </script>
 </div>

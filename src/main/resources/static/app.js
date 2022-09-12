@@ -53,9 +53,9 @@
                 printInfo();
             }
    }
-   export async function navigateFavoritesData(data_source){
+   window.navigateFavoritesData =  async function navigateFavoritesData(data_source, startIndex){
 
-               var url = window.appHost + data_source + "/" + window.userName;
+               var url = window.appHost + data_source + "/" + window.userName + "/" + startIndex;
                console.log("data source : " + url);
                const response = await fetch(url, {
                     method: 'GET',

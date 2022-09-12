@@ -118,36 +118,3 @@ export function writeDataBlockContainer(){
             appHeader.after(mainContainer);
         }
         
- export function insertDataBlockContainer(){
-
-            const data = window.clientData;
-            const siteList = data.siteList;
-            
-            for(let siteObj of siteList){
-            let siteName = siteObj.name;
-            console.log(siteName);
-            let siteBlock = document.querySelector('#' + siteName);
-            let itemsBlocksList = siteBlock.querySelectorAll('div.catalog_item');
-            let dataList = data.dataMap[siteName];
-            let iterator = Number(0);
-            
-            for(let catalogItem of dataList){
-            
-            var link = itemsBlocksList[iterator].querySelector('#item_link');
-            link.setAttribute('href', catalogItem.href);
-            
-            var img = itemsBlocksList[iterator].querySelector('#item_image');
-            img.setAttribute('src', catalogItem.imgSrc)
-            
-            var text = itemsBlocksList[iterator].querySelector('#item_text');
-            text.textContent = catalogItem.title;
-            
-            var date = itemsBlocksList[iterator].querySelector('#item_date');
-            date.textContent = catalogItem.postDate;
-            
-            iterator++;
-            
-        }
-    }
- }
-

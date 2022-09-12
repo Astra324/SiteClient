@@ -32,7 +32,7 @@
         import {prepareIndex} from './app.js';
         import {getUserProfile} from './app.js';
         import {addFavorites} from './app.js'; navigateFavoritesData
-        import {navigateFavoritesData, navigateClientUrl} from './app.js';
+        import {navigateClientUrl} from './app.js';
 
         window.addUserFavorites = function addUserFavorites(dataSource, articleId){
             let url = window.appHost + dataSource;
@@ -40,9 +40,9 @@
             disableElement('favorite-id-' + articleId, true);
         }
 
-        window.navigateFavorites = function navigateFavorites(){
+        window.navigateFavorites = function navigateFavorites(index){
             hideMainControl();
-            navigateFavoritesData('/app-data-favorites');
+            window.navigateFavoritesData('/app-data-favorites', index);
         }
 
         window.navigate = function navigate(direction) {                
@@ -97,14 +97,11 @@
             window.lastViewed = temp;
         }
         window.setCookie = function setCookie(username){
-            let date = new Date(Date.now() + 8644400e3);
+            let date = new Date(Date.now() + (86400e3 * 30));
             date = date.toUTCString();
         
             if(username != undefined){
-               document.cookie = "username=" + username;
-               document.cookie  =  "path=/";
-               document.cookie  = "expires=" + date;
-               document.cookie = "sameSite=Lax";
+               document.cookie = "username=" + username + "; expires=" + date;
                console.log("Set cookie : " + document.cookie);
             }
         }

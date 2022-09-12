@@ -112,10 +112,9 @@ public class AppController {
     private Cookie createCookie(String userName){
         Cookie newCookie = new Cookie("username", userName);
         newCookie.setPath("/");
+        newCookie.setMaxAge(86400 * 30);
         newCookie.setSecure(false);
-        newCookie.setMaxAge(31536000);
         newCookie.setHttpOnly(false);
-
         return newCookie;
     }
 

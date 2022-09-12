@@ -5,14 +5,11 @@ import com.example.client.services.*;
 import com.example.client.site_engine.SiteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -140,16 +137,19 @@ public class ClientController {
 
         return respond;
     }
-    @GetMapping("/app-data-favorites/{username}")
-    public Map<String, List<CatalogItem>> getFavorites(@PathVariable(name = "username") String username, Model model){
-        System.out.println(username);
+    @GetMapping("/app-data-favorites/{username}/{start}")
+    public Map<String, List<CatalogItem>> getFavorites(@PathVariable(name = "username") String username,
+                                                       @PathVariable(name = "start") Integer start,
+                                                       Model model){
+
         User currentUser = userService.getLoggedUserByName(username).orElseThrow(NullPointerException::new);
-        return favoritesService.getUserFavorites(username);
+        Integer skipIndex = (favoritesService.getPageLimit() * start);
+        return favoritesService.getUserFavorites(username, skipIndex);
     }
 
     @GetMapping("/app-user-add-favorites/{username}/{articleId}")
-    public String addFavorites(HttpServletResponse response,
-                                          @PathVariable(name = "articleId") Long articleId
+    public void addFavorites(HttpServletResponse response,
+                             @PathVariable(name = "articleId") Long articleId
             , @PathVariable(name = "username") String username){
         response.setHeader("result", "1");
 
@@ -164,6 +164,6 @@ public class ClientController {
             userService.updateLoggedUser(currentUser);
 
         System.out.println("favorites added article : " + username + " article id " + articleId);
-        return  "";
+
     }
 }

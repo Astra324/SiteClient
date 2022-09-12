@@ -30,13 +30,26 @@
         import {loadClientData} from './app.js';
         import {prepareIndex} from './app.js';
         import {getUserProfile} from './app.js';
-        import {addFavorites} from './app.js'; navigateFavoritesData
+        import {addFavorites, removeFavorites} from './app.js';
         import {navigateClientUrl} from './app.js';
+        import {getCurrentIndex} from './controls/navigator.js';
+
 
         window.addUserFavorites = function addUserFavorites(dataSource, articleId){
             let url = window.appHost + dataSource;
             addFavorites (url, articleId);
             disableElement('favorite-id-' + articleId, true);
+        }
+
+        window.removeUserFavorites = function removeUserFavorites(articleId){
+            let url = window.appHost + '/app-user-remove-favorites/' + window.userName + '/' + articleId;
+            removeFavorites(url);
+            console.log('remove fav : ' + url);
+            let removeItem = document.querySelector("#item-" + articleId);
+            if(removeItem != undefined){
+                removeItem.remove();
+            }
+
         }
 
         window.navigateFavorites = function navigateFavorites(index){
@@ -69,18 +82,22 @@
                 console.log("searching : " + url);
         }
         window.hideMainControl = function hideMainControl(){
+                let removeControl = document.querySelector('#navigate-control');
+                if(removeControl != undefined){
+                    removeControl.hidden = true;
+                }
                 document.querySelector('#main-navigation').hidden = true;
                 document.querySelector('#app-header-placeholder').hidden = true;
                 document.querySelector('#footer').hidden = true;
-                //document.querySelector('#navigate-control-left').hidden = true;
-                //document.querySelector('#navigate-control-right').hidden = true;
         }
         window.showMainControl = function showMainControl(){
+                let removeControl = document.querySelector('#navigate-control');
+                if(removeControl != undefined){
+                    removeControl.hidden = false;
+                }
             document.querySelector('#app-header-placeholder').hidden = false;
             document.querySelector('#main-navigation').hidden = false;
             document.querySelector('#footer').hidden = false;
-            //document.querySelector('#navigate-control-left').hidden = false;
-            //document.querySelector('#navigate-control-right').hidden = false;
         }
 
          window.getUser = function getUser(){
@@ -90,15 +107,13 @@
                 console.log("user profiler url : " + url);
         }
         window.backStep = function backStep(){
-            //document.querySelector('#profile-control').hidden = true;
             showMainControl();
             window.userProfile = null;
 
             let mainContainer = document.querySelector('#current-view');
             let temp = mainContainer.innerHTML;
 
-            mainContainer.innerHTML = window.lastViewed ;
-
+            mainContainer.innerHTML = window.lastViewed;
             window.lastViewed = temp;
         }
         window.setCookie = function setCookie(username){

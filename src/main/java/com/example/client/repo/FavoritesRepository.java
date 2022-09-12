@@ -18,6 +18,8 @@ public interface FavoritesRepository extends CrudRepository<Favorites, Long> {
 
     Favorites findByUserIdAndItemId(Long userId, Long itemId);
     Favorites findByUserIdAndItemIdOrderByDateAddedDesc(Long userId, Long itemId);
+    Long deleteByUserIdAndItemId(Long userId, Long itemId);
+
 
      default Boolean ifExists(Long userId, Long itemId){
          Favorites res = findByUserIdAndItemId(userId, itemId);

@@ -40,15 +40,19 @@ function writeBlockListAlt(title, items){
 function writeItem(item){
 
 let html = `
-          <div class="d-flex text-muted pt-3">
-            <img src="${item.imgSrc}" class="rounded me-3 ratio ratio-16x9" alt="..." style="max-height:150px; max-width:200px">
-            <a href=${window.appHost}/articles/${item.id} class="link-secondary">
-            <p class="pb-3 mb-0 middle lh-sm border-bottom">
-            ${item.title}
-            <strong class="d-block text-gray-dark mt-2">${item.postDate}</strong>
-            </p>
-            </a>
-
+          <div id="item-${item.id}"class="d-flex align-items-stretch text-muted pt-2" style="height: 130px;">
+             <div class="m-2">
+                <img src="${item.imgSrc}" class="rounded me-3 ratio ratio-16x9" alt="..." style="height: 120px;width:200px">
+            </div>
+            <div>
+                <a href=${window.appHost}/articles/${item.id} class="link-secondary">
+                    <p class="h-5 pb-3 mb-0  border-bottom mt-3">
+                        ${item.title}
+                        <strong class="d-block text-gray-dark mt-2">${item.postDate}</strong>
+                    </p>
+                </a>
+                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="window.removeUserFavorites(${item.id})">Remove</button>
+            </div>
           </div>`;
   return html;
 }

@@ -1,18 +1,18 @@
 
 export function writeNavigation(functionReference){
-let currentIndex = 0;
-let removeControl = document.querySelector('#navigate-control');
+    let currentIndex = 0;
+    let removeControl = document.querySelector('#navigate-control');
 
-if(removeControl != undefined){
-    let indexer = document.querySelector('#indexer');
-    currentIndex = indexer.value;
-    removeControl.remove();
-}
+    if(removeControl != undefined){
+        let indexer = document.querySelector('#indexer');
+        currentIndex = indexer.value;
+        removeControl.remove();
+    }
 
-let navigator = document.createElement('span');
-navigator.id = "navigate-control";
+    let navigator = document.createElement('span');
+    navigator.id = "navigate-control";
 
-navigator.innerHTML = `<button id="navigate-control-left" class="carousel-control-prev" type="button" style="max-width: 100px;">
+    navigator.innerHTML = `<button id="navigate-control-left" class="carousel-control-prev" type="button" style="max-width: 100px;">
             <span class="carousel-control-prev-icon bg-secondary position-fixed" aria-hidden="true" onclick="navigateDirection('left', ${functionReference})"></span>
             <span class="visually-hidden">Предыдущий</span>
         </button>
@@ -22,7 +22,10 @@ navigator.innerHTML = `<button id="navigate-control-left" class="carousel-contro
             <span class="visually-hidden">Следующий</span>
         </button>`;
 
-return navigator;
+    return navigator;
+}
+export function getCurrentIndex(){
+    return document.querySelector('#indexer').value;
 }
 
 window.navigateDirection = function navigateDirection(direction, functionReference){

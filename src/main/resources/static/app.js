@@ -92,6 +92,10 @@
         let response = await fetch(formatUrl);
         console.log("Favorite added : " + response.status);
   }
+     export async function removeFavorites(url){
+          let response = await fetch(url);
+          console.log("Favorite added : " + response.status);
+    }
    export async function getUserProfile(url){
                 let response = await fetch(url, {
                     method: 'POST',

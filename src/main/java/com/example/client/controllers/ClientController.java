@@ -166,4 +166,14 @@ public class ClientController {
         System.out.println("favorites added article : " + username + " article id " + articleId);
 
     }
+    @GetMapping("/app-user-remove-favorites/{username}/{articleId}")
+    public void removeFavorites(HttpServletResponse response,
+                             @PathVariable(name = "articleId") Long articleId
+            , @PathVariable(name = "username") String username){
+
+        User currentUser = userService.getLoggedUserByName(username).orElseThrow(NullPointerException::new);
+        userService.removeFavorites(currentUser.getId(), articleId);
+        userService.updateLoggedUser(currentUser);
+
+    }
 }

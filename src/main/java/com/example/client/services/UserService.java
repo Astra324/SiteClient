@@ -47,6 +47,10 @@ public class UserService {
             favoritesRepository.save(favorites);
         }
     }
+    public void removeFavorites( Long userId, Long itemId){
+        Favorites removeFav = favoritesRepository.findByUserIdAndItemId(userId, itemId);
+        favoritesRepository.delete(removeFav);
+    }
 
     public void addLoggedUser(User loggedUser){
         if(!isUserExists(loggedUser)) {

@@ -29,7 +29,7 @@
             }
    }
 
-   export async function navigateClientData(data_source, startIndex){
+   window.navigateClientData = async function navigateClientData(data_source, startIndex){
 
             var url = window.appHost + data_source + "/" + startIndex + "/" + window.userName;
             console.log("data source : " + url + " index : " + startIndex);

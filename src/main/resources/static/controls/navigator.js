@@ -1,8 +1,11 @@
 
 export function writeNavigation(functionReference){
-
+let currentIndex = 0;
 let removeControl = document.querySelector('#navigate-control');
+
 if(removeControl != undefined){
+    let indexer = document.querySelector('#indexer');
+    currentIndex = indexer.value;
     removeControl.remove();
 }
 
@@ -13,7 +16,7 @@ navigator.innerHTML = `<button id="navigate-control-left" class="carousel-contro
             <span class="carousel-control-prev-icon bg-secondary position-fixed" aria-hidden="true" onclick="navigateDirection('left', ${functionReference})"></span>
             <span class="visually-hidden">Предыдущий</span>
         </button>
-        <input id="indexer" type="hidden" value="0"></input>
+        <input id="indexer" type="hidden" value="${currentIndex}"></input>
         <button id="navigate-control-right" class="carousel-control-next" type="button" style="max-width: 100px;">
             <span class="carousel-control-next-icon bg-secondary position-fixed" aria-hidden="true" onclick="navigateDirection('right', ${functionReference})"></span>
             <span class="visually-hidden">Следующий</span>
@@ -34,9 +37,6 @@ function calculateIndex(direction){
 
         if(direction == 'right'){
             currentIndex++;
-            if(currentIndex >= maxCount){
-              currentIndex = maxCount;
-            }
         }
         else if(direction == 'left') {
             if(currentIndex > 0){

@@ -26,7 +26,7 @@ public class FavoritesService {
 
     @Transactional
     public LinkedHashMap<String, List<CatalogItem>> getUserFavorites(String username, Integer start){
-        System.out.println("getFavoritesTest : " + username ); //7E31BF86C0AE496FAA54F073A7D22339-1661367633681@admin--
+        System.out.println("getFavoritesTest : " + username );
         User user = userService.getLoggedUserByName(username).orElseThrow(NullPointerException::new);
         List<CatalogItem> catalogItems = user.getFavorites();
 
@@ -40,7 +40,9 @@ public class FavoritesService {
 
         for(Date date : titles) {
             List<CatalogItem> resultItemsList = favorites.stream().filter((e) -> e.getDateAdded().getTime() == date.getTime())
-                    .map((e) -> convertFavorites(e, catalogItems).get()).collect(toList());
+                    .map((e) -> convertFavorites(e, catalogItems).get())
+                    .sorted((i, i1)-> i1.getTimestamp().compareTo(i.getTimestamp()))
+                    .collect(toList());
             dataMap.putIfAbsent(date.toString(), resultItemsList);
         }
         return dataMap;

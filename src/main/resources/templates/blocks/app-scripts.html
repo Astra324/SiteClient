@@ -28,7 +28,6 @@
     <script th:inline="javascript" type="module">
 
         import {loadClientData} from './app.js';
-        import {navigateClientData} from './app.js';
         import {prepareIndex} from './app.js';
         import {getUserProfile} from './app.js';
         import {addFavorites} from './app.js'; navigateFavoritesData
@@ -44,16 +43,22 @@
             hideMainControl();
             window.navigateFavoritesData('/app-data-favorites', index);
         }
+        window.showFavoritesView = function showFavoritesView(){
+            let removeControl = document.querySelector('#navigate-control');
+            if(removeControl != undefined){
+                removeControl.remove();
+            }
+            hideMainControl();
+            window.navigateFavoritesData('/app-data-favorites', 0);
+        }
 
-        window.navigate = function navigate(direction) {                
-                let index = prepareIndex(direction);
-                console.log("direction : " + direction + " : " + index);
-                navigateClientData(window.dataSource, index)
+        window.navigate = function navigate(index) {
+                window.navigateClientData(window.dataSource, index)
         }
         window.navigateClientCatalogData =  function navigateClientCatalogData(dataSource, siteName, startIndex){
                 let url = dataSource + siteName;
                 console.log("catalog  data source : " + url);
-                navigateClientData(url, startIndex)
+                window.navigateClientData(url, startIndex)
                 let navTitle = document.querySelector('#navigated-title');
                 navTitle.textContent = siteName;
         }
@@ -67,15 +72,15 @@
                 document.querySelector('#main-navigation').hidden = true;
                 document.querySelector('#app-header-placeholder').hidden = true;
                 document.querySelector('#footer').hidden = true;
-                document.querySelector('#navigate-control-left').hidden = true;
-                document.querySelector('#navigate-control-right').hidden = true;
+                //document.querySelector('#navigate-control-left').hidden = true;
+                //document.querySelector('#navigate-control-right').hidden = true;
         }
         window.showMainControl = function showMainControl(){
             document.querySelector('#app-header-placeholder').hidden = false;
             document.querySelector('#main-navigation').hidden = false;
             document.querySelector('#footer').hidden = false;
-            document.querySelector('#navigate-control-left').hidden = false;
-            document.querySelector('#navigate-control-right').hidden = false;
+            //document.querySelector('#navigate-control-left').hidden = false;
+            //document.querySelector('#navigate-control-right').hidden = false;
         }
 
          window.getUser = function getUser(){

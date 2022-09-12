@@ -1,5 +1,10 @@
+import {writeNavigation} from './controls/navigator.js';
 
 export function writeDataBlockContainer(){
+
+            let body = document.querySelector('#body');
+
+            body.append(writeNavigation(window.navigate));
 
             const siteList = window.clientData.siteList;
             let appHeader = document.querySelector('#app-header-placeholder');
